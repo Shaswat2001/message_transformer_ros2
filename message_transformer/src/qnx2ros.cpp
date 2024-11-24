@@ -141,11 +141,11 @@ class QNX2ROS{
                 q.setRPY(robot_state->rpy[0] / 180 * PI, robot_state->rpy[1] / 180 * PI, robot_state->rpy[2] / 180 * PI);
                 imu_msg.orientation = tf2::toMsg(q);
                 imu_msg.angular_velocity.x = robot_state->rpy_vel[0];
-                imu_msg.angular_velocity.y = robot_state->rpy_vel[1];
-                imu_msg.angular_velocity.z = robot_state->rpy_vel[2];
+                imu_msg.angular_velocity.y = -robot_state->rpy_vel[1];
+                imu_msg.angular_velocity.z = -robot_state->rpy_vel[2];
                 imu_msg.linear_acceleration.x = robot_state->xyz_acc[0];
-                imu_msg.linear_acceleration.y = robot_state->xyz_acc[1];
-                imu_msg.linear_acceleration.z = robot_state->xyz_acc[2];
+                imu_msg.linear_acceleration.y = -robot_state->xyz_acc[1];
+                imu_msg.linear_acceleration.z = -robot_state->xyz_acc[2];
                 imu_pub_200_->publish(imu_msg);
 
                 std_msgs::msg::Float64 ultrasound_distance;
@@ -229,7 +229,7 @@ class QNX2ROS{
             if (dr->code == 0x010901)
             {
                 sensor_msgs::msg::Imu imu_msg;
-                imu_msg.header.frame_id = "base_link";
+                imu_msg.header.frame_id = "imu";
                 imu_msg.header.stamp = node_->get_clock()->now();
                 tf2::Quaternion q;
                 q.setRPY(imu_data->angle_roll / 180 * PI,
@@ -237,11 +237,11 @@ class QNX2ROS{
                         imu_data->angle_yaw / 180 * PI);
                 imu_msg.orientation = tf2::toMsg(q);
                 imu_msg.angular_velocity.x = imu_data->angular_velocity_roll;
-                imu_msg.angular_velocity.y = imu_data->angular_velocity_pitch;
-                imu_msg.angular_velocity.z = imu_data->angular_velocity_yaw;
+                imu_msg.angular_velocity.y = -imu_data->angular_velocity_pitch;
+                imu_msg.angular_velocity.z = -imu_data->angular_velocity_yaw;
                 imu_msg.linear_acceleration.x = imu_data->acc_x;
-                imu_msg.linear_acceleration.y = imu_data->acc_y;
-                imu_msg.linear_acceleration.z = imu_data->acc_z;
+                imu_msg.linear_acceleration.y = -imu_data->acc_y;
+                imu_msg.linear_acceleration.z = -imu_data->acc_z;
                 imu_pub_200_->publish(imu_msg);
             }
         }
